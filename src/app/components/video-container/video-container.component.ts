@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { WhiteListedAction } from "../white-listed-action.enum";
+import { Subscription } from 'rxjs';
+import { SpeechService } from './../../services/speech.service';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import { WhiteListedAction } from "../../models/white-listed-action.enum";
 
 @Component({
   selector: "app-video-container",
   templateUrl: "./video-container.component.html",
   styleUrls: ["./video-container.component.sass"]
 })
-export class VideoContainerComponent implements OnInit {
+export class VideoContainerComponent implements OnInit, OnDestroy {
   @ViewChild("video", { static: false }) video: ElementRef<HTMLVideoElement>;
   sources = [
     "assets/videos/schulung_step1_x264.mp4",
@@ -16,10 +18,23 @@ export class VideoContainerComponent implements OnInit {
   ];
   activeSource = 0;
   playbackRate = 1;
+  private subscriptions: Subscription[] = [];
 
-  constructor() {}
+  constructor(private speechService: SpeechService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.subscriptions.push(
+      this.speechService.listen().subscribe(triggeredActions => {
+        triggeredActions.forEach(triggeredAction =>
+          this.triggerAction(triggeredAction)
+        );
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
 
   get videoElement() {
     return this.video.nativeElement;

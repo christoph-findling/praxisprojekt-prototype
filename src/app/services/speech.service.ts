@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { resultList, RxSpeechRecognitionService } from '@kamiazya/ngx-speech-recognition';
 import { Subject } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { WhiteListedAction } from './white-listed-action.enum';
+import { WhiteListedAction } from '../models/white-listed-action.enum';
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {

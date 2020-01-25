@@ -8,5 +8,11 @@ export enum WhiteListedAction {
   "start" = "start",
   "stopp" = "stopp",
   "beenden" = "beenden",
-  "eva" = "eva"
+  "informationen" = "informationen",
+  "werkzeuge" = "werkzeuge",
+  "komplikationen" = "komplikationen",
+  "anleitung" = "anleitung",
+  "lernvorgang" = "lernvorgang",
+  "trainingsvorgang" = "trainingsvorgang",
+  "wiederholen" = "wiederholen"
 }
