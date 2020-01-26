@@ -2,7 +2,7 @@ import { RecordedVideo } from "./recorded-video.model";
 import { StoredVideo } from "./stored-video.model";
 
 export interface Step {
-  id: number;
+  id: string;
   name: string;
   tools: string;
   information: string;

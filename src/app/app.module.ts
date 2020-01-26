@@ -11,11 +11,12 @@ import { NgForageModule } from 'ngforage';
 import { VideoRecordingContainerComponent } from './components/video-recording-container/video-recording-container.component';
 import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { LearningPathComponent } from './components/learning-path/learning-path.component';
 
 const appRoutes: Routes = [
-  { path: 'live', component: VideoRecordingContainerComponent },
-  { path: 'learning-path/:id', component: LearningPathWriteComponent },
+  { path: 'learning-path/:id', component: LearningPathComponent },
+  { path: 'learning-path/edit/:id', component: LearningPathWriteComponent },
   {
     path: 'learning-paths',
     component: LearningPathOverviewComponent
@@ -38,7 +39,8 @@ const appRoutes: Routes = [
     LearningPathWriteComponent,
     StepContainerComponent,
     StepComponent,
-    VideoRecordingContainerComponent
+    VideoRecordingContainerComponent,
+    LearningPathComponent
   ],
   imports: [
     BrowserModule,

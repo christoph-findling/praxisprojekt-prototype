@@ -5,7 +5,7 @@ export enum Operation {
 }
 
 export interface LearningPath {
-  id: number;
+  id: string;
   createdAt: Date;
   name: string;
   operation: Operation;

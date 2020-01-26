@@ -1,16 +1,16 @@
-import { StoreService } from './../../services/store-service.service';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LearningPath } from 'src/app/models/learning-path.model';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { StoreService } from 'src/app/services/store-service.service';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-learning-path-write',
-  templateUrl: './learning-path-write.component.html',
-  styleUrls: ['./learning-path-write.component.sass']
+  selector: 'app-learning-path',
+  templateUrl: './learning-path.component.html',
+  styleUrls: ['./learning-path.component.sass']
 })
-export class LearningPathWriteComponent implements OnInit {
+export class LearningPathComponent implements OnInit {
   learningPath$: Observable<LearningPath>;
 
   constructor(private route: ActivatedRoute, private store: StoreService) { }
@@ -20,9 +20,5 @@ export class LearningPathWriteComponent implements OnInit {
       switchMap((params: ParamMap) =>
         this.store.read(params.get('id')))
     );
-  }
-
-  update() {
-    // this.store.update()
   }
 }

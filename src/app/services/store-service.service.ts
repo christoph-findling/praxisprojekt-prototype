@@ -1,8 +1,9 @@
 import { LearningPath } from "./../models/learning-path.model";
 import { Injectable } from "@angular/core";
 import { NgForage } from "ngforage";
-import { Observable, from } from "rxjs";
+import { Observable, from, Subject } from "rxjs";
 import { RecordedVideo } from "../models/recorded-video.model";
+import { resolve } from 'url';
 
 @Injectable({
   providedIn: "root"
@@ -10,7 +11,8 @@ import { RecordedVideo } from "../models/recorded-video.model";
 export class StoreService {
   constructor(private readonly ngf: NgForage) {}
 
-  getAll(): LearningPath[] {
+  getAll(): Observable<LearningPath[]> {
+    const result = new Subject<LearningPath[]>();
     const learningPaths: LearningPath[] = [];
     this.onNgfReady(() => {
       this.ngf.iterate((value, key) => {
@@ -18,13 +20,15 @@ export class StoreService {
           learningPaths[key] = value;
         }
       });
+      result.next(learningPaths);
+      result.complete();
     });
-    return learningPaths;
+    return result.asObservable();
   }
 
   update(learningPath: LearningPath) {
     this.onNgfReady(() => {
-      this.ngf.setItem(learningPath.id.toString(), learningPath);
+      this.ngf.setItem(learningPath.id, learningPath);
     });
   }
 
@@ -33,17 +37,17 @@ export class StoreService {
     return this.update(learningPath);
   }
 
-  read(id: number): Observable<LearningPath> {
+  read(id: string): Observable<LearningPath> {
     return from(
       this.ngf.ready().then(() => {
-        return this.ngf.getItem<LearningPath>(id.toString());
+        return this.ngf.getItem<LearningPath>(id);
       })
     );
   }
 
-  delete(id: number) {
+  delete(id: string) {
     this.onNgfReady(() => {
-      this.ngf.removeItem(id.toString());
+      this.ngf.removeItem(id);
     });
   }
 
