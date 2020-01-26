@@ -1,4 +1,4 @@
-import { defaultLearningPath } from './default-learning-path';
+import { defaultLearningPath, defaultLearningPath2, defaultLearningPath3 } from './default-learning-path';
 import { StoreService } from './services/store-service.service';
 import { Component } from "@angular/core";
 
@@ -10,5 +10,7 @@ import { Component } from "@angular/core";
 export class AppComponent {
   constructor(private store: StoreService) {
     this.store.create(defaultLearningPath);
+    this.store.create(defaultLearningPath2);
+    this.store.create(defaultLearningPath3);
   }
 }

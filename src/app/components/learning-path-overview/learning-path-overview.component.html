@@ -1,1 +1,6 @@
 <p>learning-path-overview works!</p>
+<div cdkDropList>
+    <div *ngFor="let learningPath of learningPaths$ | async" cdkDrag>
+        {{learningPath.name}}
+    </div>
+</div>

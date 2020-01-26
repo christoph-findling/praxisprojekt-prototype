@@ -13,6 +13,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { LearningPathComponent } from './components/learning-path/learning-path.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const appRoutes: Routes = [
   { path: 'learning-path/:id', component: LearningPathComponent },
@@ -56,7 +57,8 @@ const appRoutes: Routes = [
       appRoutes
     ),
     BrowserAnimationsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    DragDropModule
   ],
   providers: [RxSpeechRecognitionService],
   bootstrap: [AppComponent]
