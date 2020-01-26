@@ -33,7 +33,6 @@ export class RecordingService {
       return;
     }
 
-    this.recordingTime$.next("00:00");
     this.stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false
@@ -58,8 +57,10 @@ export class RecordingService {
     try {
       await this.recorder.stopRecording();
       const blob = await this.recorder.getBlob();
+      this.stopMedia();
       return blob;
     } catch (err) {
+      this.stopMedia();
       return err;
     }
   }
