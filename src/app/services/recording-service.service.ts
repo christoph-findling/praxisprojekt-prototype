@@ -9,23 +9,6 @@ import { RecordedVideo } from "../models/recorded-video.model";
 export class RecordingService {
   private stream;
   private recorder;
-  private interval;
-  private startTime;
-  private recorded$ = new Subject<RecordedVideo>();
-  private recordingTime$ = new Subject<string>();
-  private recordingFailed$ = new Subject<string>();
-
-  getRecordedBlob(): Observable<RecordedVideo> {
-    return this.recorded$.asObservable();
-  }
-
-  getRecordedTime(): Observable<string> {
-    return this.recordingTime$.asObservable();
-  }
-
-  recordingFailed(): Observable<string> {
-    return this.recordingFailed$.asObservable();
-  }
 
   async startRecording() {
     if (this.recorder) {
@@ -68,12 +51,6 @@ export class RecordingService {
   private stopMedia() {
     if (this.recorder) {
       this.recorder = null;
-      clearInterval(this.interval);
-      this.startTime = null;
-      // if (this.stream) {
-      //   this.stream.getVideoTracks().forEach(track => track.stop());
-      //   this.stream = null;
-      // }
     }
   }
 }
