@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { NgForage } from "ngforage";
 import { Observable, from, Subject } from "rxjs";
 import { RecordedVideo } from "../models/recorded-video.model";
-import { resolve } from 'url';
+import { resolve } from "url";
 
 @Injectable({
   providedIn: "root"
@@ -33,7 +33,7 @@ export class StoreService {
   }
 
   create(learningPath: LearningPath) {
-    learningPath.isDefault = false;
+    // learningPath.isDefault = false;
     return this.update(learningPath);
   }
 
@@ -68,7 +68,7 @@ export class StoreService {
         recordedVideo.blob
       );
       console.log("SAVED VIDEO");
-      return recordedVideo.fileName;
+      return "video_" + recordedVideo.fileName;
     } catch (err) {
       console.log("ERROR SAVING VIDEO");
       return false;

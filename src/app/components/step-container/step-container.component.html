@@ -1,1 +1,1 @@
-<p>step-container works!</p>
+<app-step [step]="step" *ngFor="let step of steps" (click)="goToStep(step)">

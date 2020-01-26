@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
+import { Step } from "src/app/models/step.model";
 
 @Component({
-  selector: 'app-step-container',
-  templateUrl: './step-container.component.html',
-  styleUrls: ['./step-container.component.sass']
+  selector: "app-step-container",
+  templateUrl: "./step-container.component.html",
+  styleUrls: ["./step-container.component.sass"]
 })
 export class StepContainerComponent implements OnInit {
+  @Input() steps: Step[];
+  @Output() stepChange = new EventEmitter<Step>();
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  goToStep(step: Step) {
+    this.stepChange.emit(step);
   }
-
 }

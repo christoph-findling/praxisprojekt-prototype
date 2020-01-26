@@ -1,5 +1,12 @@
-import { SpeechService } from './../../services/speech.service';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import { SpeechService } from "./../../services/speech.service";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  Input
+} from "@angular/core";
 import { RecordingService } from "src/app/services/recording-service.service";
 import { StoreService } from "src/app/services/store-service.service";
 import { Subscription, Observable } from "rxjs";
@@ -8,6 +15,7 @@ import { LearningPath } from "src/app/models/learning-path.model";
 import { defaultLearningPath } from "src/app/default-learning-path";
 import { Step } from "src/app/models/step.model";
 import { StoredVideo } from "src/app/models/stored-video.model";
+import { WhiteListedAction } from "src/app/models/white-listed-action.enum";
 
 @Component({
   selector: "app-video-recording-container",
@@ -20,9 +28,10 @@ export class VideoRecordingContainerComponent implements OnInit, OnDestroy {
     HTMLVideoElement
   >;
 
-  private currentLearningPath: LearningPath;
-  private currentStepIndex: number;
+  @Input() currentStepIndex: number;
+  @Input() currentLearningPath: LearningPath;
   private subscriptions: Subscription[] = [];
+  isRecording = false;
 
   constructor(
     private recordingService: RecordingService,
@@ -33,12 +42,10 @@ export class VideoRecordingContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.startCamera();
     this.currentLearningPath = defaultLearningPath;
-    this.currentStepIndex = 1;
     this.subscriptions.push(
       this.speechService.listen().subscribe(triggeredActions => {
         triggeredActions.forEach(triggeredAction =>
-          // this.triggerAction(triggeredAction)
-          console.log(triggeredAction)
+          this.triggerAction(triggeredAction)
         );
       })
     );
@@ -52,16 +59,25 @@ export class VideoRecordingContainerComponent implements OnInit, OnDestroy {
     return this.video.nativeElement;
   }
 
-  startListening() {
-    this.speechService.start();
+  startRecording() {
+    this.isRecording = true;
+    this.recordingService.startRecording();
   }
 
-  startRecording() {
-    this.recordingService.startRecording();
+  triggerAction(action: WhiteListedAction) {
+    switch (action) {
+      case WhiteListedAction.aufnehmen:
+        this.startRecording();
+        break;
+      case WhiteListedAction.stopp:
+        this.stopRecording();
+        break;
+    }
   }
 
   async stopRecording() {
     try {
+      this.isRecording = false;
       const blob = (await this.recordingService.stopRecording()) as Blob;
       this.storeVideo(blob);
     } catch (err) {

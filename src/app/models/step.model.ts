@@ -8,4 +8,5 @@ export interface Step {
   information: string;
   complications: string;
   videos: StoredVideo[];
+  instructionVideoSource: string;
 }

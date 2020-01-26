@@ -1,9 +1,8 @@
 <mat-sidenav-container>
-    <mat-sidenav mode="side" opened>
-        Sidenav content
+    <mat-sidenav mode="side" [opened]="showSidebar">
+        <app-sidenav></app-sidenav>
     </mat-sidenav>
     <mat-sidenav-content>
-        Main content
         <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>

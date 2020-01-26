@@ -14,5 +14,7 @@ export enum WhiteListedAction {
   "anleitung" = "anleitung",
   "lernvorgang" = "lernvorgang",
   "trainingsvorgang" = "trainingsvorgang",
-  "wiederholen" = "wiederholen"
+  "wiederholen" = "wiederholen",
+  "aufnehmen" = "aufnehmen",
+  "seitenleiste" = "seitenleiste"
 }

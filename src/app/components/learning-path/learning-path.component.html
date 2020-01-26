@@ -1,1 +1,16 @@
-<p>learning-path works!</p>
+<div *ngIf="finished">
+  Herzlichen Glückwunsch zum Absolvieren dieser Einheit!
+</div>
+<div *ngIf="!finished">
+  <div *ngIf="learningPath$ | async as learningPath">
+    <app-video-recording-container *ngIf="isTraining && isStateVideo"
+      [currentStepIndex]="currentStepIndex"
+      [currentLearningPath]="learningPath">
+    </app-video-recording-container>
+    <app-video-container *ngIf="isLearning || isStateInstruction" [source]="videoSource"
+        (videoComplete)="onVideoComplete()">
+    </app-video-container>
+    <app-step-container [steps]="learningPath.steps" (stepChange)="changeStep($event)">
+    </app-step-container>
+  </div>
+</div>
