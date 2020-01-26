@@ -8,6 +8,7 @@ import { LearningPathWriteComponent } from './components/learning-path-write/lea
 import { StepContainerComponent } from './components/step-container/step-container.component';
 import { StepComponent } from './components/step/step.component';
 import { NgForageModule } from 'ngforage';
+import { VideoRecordingContainerComponent } from './components/video-recording-container/video-recording-container.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { NgForageModule } from 'ngforage';
     LearningPathOverviewComponent,
     LearningPathWriteComponent,
     StepContainerComponent,
-    StepComponent
+    StepComponent,
+    VideoRecordingContainerComponent
   ],
   imports: [
     BrowserModule,

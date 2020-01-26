@@ -1,4 +1,4 @@
 export interface RecordedVideo {
-  createdAt: Date;
-  path: string;
+  fileName: string;
+  blob: Blob;
 }

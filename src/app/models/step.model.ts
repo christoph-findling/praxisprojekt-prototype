@@ -1,4 +1,5 @@
 import { RecordedVideo } from "./recorded-video.model";
+import { StoredVideo } from "./stored-video.model";
 
 export interface Step {
   id: number;
@@ -6,5 +7,5 @@ export interface Step {
   tools: string;
   information: string;
   complications: string;
-  videos: RecordedVideo[];
+  videos: StoredVideo[];
 }

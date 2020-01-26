@@ -20,8 +20,11 @@
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
     "@kamiazya/ngx-speech-recognition": "^0.4.3",
+    "file-system": "^2.2.2",
     "localforage": "^1.5.0",
+    "moment": "^2.24.0",
     "ngforage": "^5.0.0",
+    "recordrtc": "^5.5.5",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
