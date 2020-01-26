@@ -9,6 +9,26 @@ import { StepContainerComponent } from './components/step-container/step-contain
 import { StepComponent } from './components/step/step.component';
 import { NgForageModule } from 'ngforage';
 import { VideoRecordingContainerComponent } from './components/video-recording-container/video-recording-container.component';
+import { RouterModule, Routes } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSidenavModule} from '@angular/material/sidenav';
+
+const appRoutes: Routes = [
+  { path: 'live', component: VideoRecordingContainerComponent },
+  { path: 'learning-path/:id', component: LearningPathWriteComponent },
+  {
+    path: 'learning-paths',
+    component: LearningPathOverviewComponent
+  },
+  { path: '',
+    redirectTo: '/learning-paths',
+    pathMatch: 'full'
+  },
+  { path: '**',
+    redirectTo: '/learning-paths',
+    pathMatch: 'full'
+  }
+];
 
 @NgModule({
   declarations: [
@@ -30,6 +50,11 @@ import { VideoRecordingContainerComponent } from './components/video-recording-c
       interimResults: true,
       maxAlternatives: 1
     }),
+    RouterModule.forRoot(
+      appRoutes
+    ),
+    BrowserAnimationsModule,
+    MatSidenavModule
   ],
   providers: [RxSpeechRecognitionService],
   bootstrap: [AppComponent]
