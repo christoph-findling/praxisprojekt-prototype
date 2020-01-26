@@ -27,7 +27,7 @@ export class RecordingService {
     this.stopMedia();
   }
 
-  private async record() {
+  private record() {
     this.recorder = new RecordRTC.RecordRTCPromisesHandler(this.stream, {
       type: "video",
       mimeType: "video/webm"

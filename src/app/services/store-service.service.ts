@@ -3,8 +3,6 @@ import { Injectable } from "@angular/core";
 import { NgForage } from "ngforage";
 import { Observable, from } from "rxjs";
 import { RecordedVideo } from "../models/recorded-video.model";
-import * as RecordRTC from "recordrtc";
-import { async } from "@angular/core/testing";
 
 @Injectable({
   providedIn: "root"
@@ -15,7 +13,11 @@ export class StoreService {
   getAll(): LearningPath[] {
     const learningPaths: LearningPath[] = [];
     this.onNgfReady(() => {
-      this.ngf.iterate((value, key) => (learningPaths[key] = value));
+      this.ngf.iterate((value, key) => {
+        if (key.indexOf("video") < 0) {
+          learningPaths[key] = value;
+        }
+      });
     });
     return learningPaths;
   }
@@ -49,10 +51,18 @@ export class StoreService {
     this.ngf.ready().then(() => fn());
   }
 
+  async getVideo(fileName: string): Promise<Blob> {
+    await this.ngf.ready();
+    return await this.ngf.getItem("video_" + fileName);
+  }
+
   async storeVideo(recordedVideo: RecordedVideo) {
     try {
       await this.ngf.ready();
-      await this.ngf.setItem(recordedVideo.fileName, recordedVideo.blob);
+      await this.ngf.setItem(
+        "video_" + recordedVideo.fileName,
+        recordedVideo.blob
+      );
       console.log("SAVED VIDEO");
       return recordedVideo.fileName;
     } catch (err) {
