@@ -27,7 +27,7 @@ import { VideoRecordingContainerComponent } from './components/video-recording-c
     SpeechRecognitionModule.withConfig({
       lang: 'de-de',
       continuous: true,
-      interimResults: false,
+      interimResults: true,
       maxAlternatives: 1
     }),
   ],

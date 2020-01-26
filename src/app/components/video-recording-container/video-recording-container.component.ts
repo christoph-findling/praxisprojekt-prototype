@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { SpeechService } from './../../services/speech.service';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { RecordingService } from "src/app/services/recording-service.service";
 import { StoreService } from "src/app/services/store-service.service";
 import { Subscription, Observable } from "rxjs";
@@ -13,7 +14,7 @@ import { StoredVideo } from "src/app/models/stored-video.model";
   templateUrl: "./video-recording-container.component.html",
   styleUrls: ["./video-recording-container.component.sass"]
 })
-export class VideoRecordingContainerComponent implements OnInit {
+export class VideoRecordingContainerComponent implements OnInit, OnDestroy {
   @ViewChild("video", { static: false }) video: ElementRef<HTMLVideoElement>;
   @ViewChild("videoPreview", { static: false }) videoPreview: ElementRef<
     HTMLVideoElement
@@ -21,20 +22,38 @@ export class VideoRecordingContainerComponent implements OnInit {
 
   private currentLearningPath: LearningPath;
   private currentStepIndex: number;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private recordingService: RecordingService,
-    private storageService: StoreService
+    private storageService: StoreService,
+    private speechService: SpeechService
   ) {}
 
   ngOnInit() {
     this.startCamera();
     this.currentLearningPath = defaultLearningPath;
     this.currentStepIndex = 1;
+    this.subscriptions.push(
+      this.speechService.listen().subscribe(triggeredActions => {
+        triggeredActions.forEach(triggeredAction =>
+          // this.triggerAction(triggeredAction)
+          console.log(triggeredAction)
+        );
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   get videoElement() {
     return this.video.nativeElement;
+  }
+
+  startListening() {
+    this.speechService.start();
   }
 
   startRecording() {
