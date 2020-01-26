@@ -2,11 +2,6 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Subject } from "rxjs";
 import { Step } from "../models/step.model";
 
-// export enum Mode {
-//   OVERVIEW = "overview",
-//   LEARNING_PATH = "learning_path"
-// }
-
 export enum SidenavMode {
   SIDEBAR = "sidebar",
   TOOLS = "tools",
@@ -19,7 +14,6 @@ export enum SidenavMode {
   providedIn: "root"
 })
 export class DataService {
-  // mode$: BehaviorSubject<Mode> = new BehaviorSubject(Mode.OVERVIEW);
   currentStep$: Subject<Step> = new Subject();
   sidenavMode$: Subject<SidenavMode> = new Subject();
 

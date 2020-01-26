@@ -23,6 +23,7 @@ export class LearningPathOverviewComponent implements OnInit {
 
   ngOnInit() {
     this.learningPaths$ = this.store.getAll();
+    this.learningPaths$.subscribe(learningPaths => console.log(learningPaths));
   }
 
   goToPath(id: string, action: ActionType) {

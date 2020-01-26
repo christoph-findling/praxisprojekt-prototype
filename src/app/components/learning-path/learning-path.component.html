@@ -3,11 +3,11 @@
 </div>
 <div *ngIf="!finished">
   <div *ngIf="learningPath$ | async as learningPath">
-    <app-video-recording-container *ngIf="isTraining && isStateVideo"
+    <app-video-recording-container [hidden]="isLearning || isStateInstruction"
       [currentStepIndex]="currentStepIndex"
       [currentLearningPath]="learningPath">
     </app-video-recording-container>
-    <app-video-container *ngIf="isLearning || isStateInstruction" [source]="videoSource"
+    <app-video-container [hidden]="isTraining && isStateVideo" [source]="videoSource"
         (videoComplete)="onVideoComplete()">
     </app-video-container>
     <app-step-container [steps]="learningPath.steps" (stepChange)="changeStep($event)">

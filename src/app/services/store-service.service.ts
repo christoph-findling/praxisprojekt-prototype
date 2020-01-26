@@ -17,11 +17,12 @@ export class StoreService {
     this.onNgfReady(() => {
       this.ngf.iterate((value, key) => {
         if (key.indexOf("video") < 0) {
-          learningPaths[key] = value;
+          learningPaths.push(value as LearningPath);
         }
+      }).then(() => {
+        result.next(learningPaths);
+        result.complete();
       });
-      result.next(learningPaths);
-      result.complete();
     });
     return result.asObservable();
   }

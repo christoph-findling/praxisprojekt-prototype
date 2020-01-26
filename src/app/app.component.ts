@@ -13,7 +13,7 @@ import { DataService, SidenavMode } from "./services/data.service";
   styleUrls: ["./app.component.sass"]
 })
 export class AppComponent {
-  showSidebar = false;
+  showSidebar = true;
 
   constructor(private store: StoreService, private dataService: DataService) {
     this.store.create(defaultLearningPath);

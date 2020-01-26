@@ -21,9 +21,9 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 
 const appRoutes: Routes = [
+  { path: "learning-path/edit/new", component: LearningPathWriteComponent, pathMatch: "full" },
+  { path: "learning-path/edit/:id", component: LearningPathWriteComponent, pathMatch: "full" },
   { path: "learning-path/:id/:type", component: LearningPathComponent },
-  { path: "learning-path/edit/:id", component: LearningPathWriteComponent },
-  { path: "learning-path/edit/new", component: LearningPathWriteComponent },
   {
     path: "learning-paths",
     component: LearningPathOverviewComponent

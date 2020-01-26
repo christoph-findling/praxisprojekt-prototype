@@ -82,7 +82,9 @@ export class LearningPathComponent implements OnInit, OnDestroy {
           throw new Error("Learning path doesn't have any steps!");
         }
         this.steps = learningPath.steps;
-        this.startStep();
+        setTimeout(() => {
+          this.startStep();
+        }, 500);
       })
     );
 
@@ -114,12 +116,14 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   }
 
   changeStep(step: Step) {
-    this.currentStepIndex = this.steps.indexOf(step);
+    const stepIndex = this.steps.findIndex(stepIterator => stepIterator.id === step.id);
+    this.currentStepIndex = stepIndex !== -1 ? stepIndex : this.currentStepIndex;
     this.startStep();
   }
 
   private startStep() {
-    if (this.recordingContainer.isRecording) {
+    this.updateDataService(this.steps[this.currentStepIndex]);
+    if (this.recordingContainer && this.recordingContainer.isRecording) {
       this.recordingContainer.stopRecording().then(() => {
         this.startInstructionSequence();
       });
@@ -142,30 +146,39 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   triggerAction(action: WhiteListedAction) {
     switch (action) {
       case WhiteListedAction.weiter:
+        console.log('executing weiter');
         this.nextStep();
         break;
       case WhiteListedAction.zurück:
+        console.log('executing zurück');
         this.previousStep();
         break;
       case WhiteListedAction.beenden:
+        console.log('executing beenden');
         this.end();
         break;
       case WhiteListedAction.seitenleiste:
+        console.log('executing seitenleiste');
         this.toggleSidebar();
         break;
       case WhiteListedAction.anleitung:
+        console.log('executing anleitung');
         this.showSidebar();
         break;
       case WhiteListedAction.informationen:
+        console.log('executing informationen');
         this.showInformation();
         break;
       case WhiteListedAction.komplikationen:
+        console.log('executing komplikationen');
         this.showComplications();
         break;
       case WhiteListedAction.werkzeuge:
+        console.log('executing werkzeuge');
         this.showTools();
         break;
       case WhiteListedAction.wiederholen:
+        console.log('executing wiederholen');
         this.resetCurrentStep();
         break;
     }
@@ -193,14 +206,15 @@ export class LearningPathComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentStepIndex++;
-    this.updateDataService(this.steps[this.currentStepIndex]);
+    this.startStep();
   }
 
   private previousStep() {
     if (this.currentStepIndex === 0) {
       return;
     }
-    this.updateDataService(this.steps[this.currentStepIndex]);
+    this.currentStepIndex--;
+    this.startStep();
   }
 
   private end() {
