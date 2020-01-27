@@ -115,7 +115,7 @@ export class LearningPathComponent implements OnInit, OnDestroy {
     if (this.isLearning) {
       this.videoSource = this.lastVideoForCurrentStep.path;
     } else {
-      this.recordingContainer.startRecording();
+      // this.recordingContainer.startRecording();
     }
   }
 
@@ -143,9 +143,9 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   private startInstructionSequence() {
     this.state = State.INSTRUCTION;
     this.videoSource = this.currentStep.instructionVideoSource;
-    setTimeout(() => {
-      this.videoContainer.play();
-    }, 500);
+    // setTimeout(() => {
+    //   this.videoContainer.play();
+    // }, 500);
   }
 
   private updateDataService(step: Step) {

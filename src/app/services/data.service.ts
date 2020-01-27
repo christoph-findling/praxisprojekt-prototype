@@ -15,7 +15,7 @@ export enum SidenavMode {
 })
 export class DataService {
   currentStep$: Subject<Step> = new Subject();
-  sidenavMode$: Subject<SidenavMode> = new Subject();
+  sidenavMode$ = new BehaviorSubject<SidenavMode>(SidenavMode.HIDE);
 
   constructor() {}
 
@@ -28,7 +28,11 @@ export class DataService {
   }
 
   toggleSidebar() {
-    this.setSidenavMode(SidenavMode.HIDE);
+    if (this.sidenavMode$.getValue() !== SidenavMode.HIDE) {
+      this.setSidenavMode(SidenavMode.HIDE);
+    } else {
+      this.setSidenavMode(SidenavMode.SIDEBAR);
+    }
   }
 
   showSidebar() {
