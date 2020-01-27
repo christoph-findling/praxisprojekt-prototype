@@ -1,15 +1,16 @@
 import { LearningPath } from "./../models/learning-path.model";
 import { Injectable } from "@angular/core";
-import { NgForage } from "ngforage";
+import { NgForage, NgForageCache } from "ngforage";
 import { Observable, from, Subject } from "rxjs";
 import { RecordedVideo } from "../models/recorded-video.model";
-import { resolve } from "url";
+import { defaultLearningPath, defaultLearningPath2, defaultLearningPath3 } from '../default-learning-path';
+
 
 @Injectable({
   providedIn: "root"
 })
 export class StoreService {
-  constructor(private readonly ngf: NgForage) {}
+  constructor(private readonly ngf: NgForage, private readonly ngfCache: NgForageCache) {}
 
   getAll(): Observable<LearningPath[]> {
     const result = new Subject<LearningPath[]>();
@@ -31,12 +32,13 @@ export class StoreService {
 
   update(learningPath: LearningPath) {
     this.onNgfReady(() => {
+      this.ngfCache.setCached(learningPath.id, learningPath);
       this.ngf.setItem(learningPath.id, learningPath);
     });
   }
 
   create(learningPath: LearningPath) {
-    // learningPath.isDefault = false;
+    learningPath.isDefault = false;
     return this.update(learningPath);
   }
 
@@ -50,8 +52,18 @@ export class StoreService {
 
   delete(id: string) {
     this.onNgfReady(() => {
+      this.ngfCache.removeCached(id);
       this.ngf.removeItem(id);
     });
+  }
+
+  async seedDefaults() {
+    const all = await this.getAll().toPromise();
+    if (!all || !all.length) {
+      this.update(defaultLearningPath);
+      this.update(defaultLearningPath2);
+      this.update(defaultLearningPath3);
+    }
   }
 
   private onNgfReady(fn: () => void) {
@@ -81,6 +93,7 @@ export class StoreService {
   async removeVideo(fileName: string) {
     try {
       await this.ngf.ready();
+      await this.ngfCache.removeCached(fileName);
       await this.ngf.removeItem(fileName);
       console.log("REMOVED VIDEO");
       return true;

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 import { LearningPath } from "src/app/models/learning-path.model";
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { StoreService } from "src/app/services/store-service.service";
 import { switchMap } from "rxjs/operators";
 import { ActionType } from "src/app/models/action-type.enum";
@@ -12,6 +12,7 @@ import { WhiteListedAction } from "src/app/models/white-listed-action.enum";
 import { NavigationService } from "src/app/services/navigation.service";
 import { VideoContainerComponent } from "../video-container/video-container.component";
 import { VideoRecordingContainerComponent } from "../video-recording-container/video-recording-container.component";
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 enum State {
   INSTRUCTION = "instruction",
@@ -31,7 +32,7 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   learningPath$: Observable<LearningPath>;
   type: ActionType = ActionType.TRAINING;
   finished = false;
-  videoSource: string;
+  videoSource: string | SafeUrl;
   private subscriptions: Subscription[] = [];
   currentStepIndex = 0;
   private steps: Step[] = [];
@@ -43,7 +44,9 @@ export class LearningPathComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private dataService: DataService,
     private speechService: SpeechService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   get isTraining() {
@@ -82,6 +85,7 @@ export class LearningPathComponent implements OnInit, OnDestroy {
         if (!learningPath || !learningPath.steps || !learningPath.steps[0]) {
           throw new Error("Learning path doesn't have any steps!");
         }
+        this.store.getAll();
         this.steps = learningPath.steps;
         setTimeout(() => {
           console.log("start step");
@@ -113,10 +117,25 @@ export class LearningPathComponent implements OnInit, OnDestroy {
     }
     this.state = State.VIDEO;
     if (this.isLearning) {
-      this.videoSource = this.lastVideoForCurrentStep.path;
+      this.showLearningVideo();
     } else {
-      // this.recordingContainer.startRecording();
+      this.recordingContainer.startCamera();
     }
+  }
+
+  private async showLearningVideo() {
+    const fileName = this.lastVideoForCurrentStep ? this.lastVideoForCurrentStep.fileName : null;
+    if (!fileName) {
+      this.videoSource = null;
+      return;
+    }
+    const video = await this.store.getVideo(fileName);
+    if (!video) {
+      this.videoSource = null;
+      return;
+    }
+    const blobURL = window.URL.createObjectURL(video);
+    this.videoSource = this.sanitizer.bypassSecurityTrustResourceUrl(blobURL);
   }
 
   changeStep(step: Step) {
@@ -155,6 +174,10 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   // Speech service actions
   triggerAction(action: WhiteListedAction) {
     switch (action) {
+      case WhiteListedAction.start:
+        console.log("executing start");
+        this.startVideoState();
+        break;
       case WhiteListedAction.weiter:
         console.log("executing weiter");
         this.nextStep();
@@ -194,6 +217,16 @@ export class LearningPathComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async startVideoState() {
+    if (this.isTraining && this.isStateInstruction) {
+      this.state = State.VIDEO;
+      await this.recordingContainer.startCamera();
+    } else if (this.isLearning && this.isStateInstruction) {
+      this.state = State.VIDEO;
+      this.showLearningVideo();
+    }
+  }
+
   private toggleSidebar() {
     this.dataService.toggleSidebar();
   }
@@ -211,21 +244,15 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   }
 
   private async nextStep() {
-    if (this.isTraining && this.isStateInstruction) {
-      this.state = State.VIDEO;
-      await this.recordingContainer.startCamera();
-      this.recordingContainer.startRecording();
-    } else {
-      if (this.currentStepIndex === this.steps.length - 1) {
-        if (this.recordingContainer.isRecording) {
-          this.recordingContainer.stopRecording();
-        }
-        this.finished = true;
-        return;
+    if (this.currentStepIndex === this.steps.length - 1) {
+      if (this.recordingContainer.isRecording) {
+        this.recordingContainer.stopRecording();
       }
-      this.currentStepIndex++;
-      this.startStep();
+      this.finished = true;
+      return;
     }
+    this.currentStepIndex++;
+    this.startStep();
   }
 
   private previousStep() {
@@ -237,7 +264,7 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   }
 
   private end() {
-    this.navigationService.getOverviewPage();
+    this.router.navigate([this.navigationService.getOverviewPage()]);
   }
 
   private resetCurrentStep() {

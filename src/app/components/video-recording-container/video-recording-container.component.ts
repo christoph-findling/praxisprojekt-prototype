@@ -69,7 +69,7 @@ export class VideoRecordingContainerComponent implements OnInit, OnDestroy {
       case WhiteListedAction.aufnehmen:
         this.startRecording();
         break;
-      case WhiteListedAction.stopp:
+      case WhiteListedAction.stop:
         this.stopRecording();
         break;
     }

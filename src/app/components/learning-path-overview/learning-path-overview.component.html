@@ -4,7 +4,6 @@
       <div class="app-learning-path-overview__path" *ngFor="let learningPath of learningPaths$ | async">
         <h3 class="app-learning-path-app-learning-path-overview__path-name">
           {{learningPath.name}}
-          {{learningPath.isDefault}}
         </h3>
         <button (click)="goToPath(learningPath.id, 'learning')">Start Lernvorgang</button>
         <button (click)="goToPath(learningPath.id, 'training')">Start Trainingsvorgang</button>

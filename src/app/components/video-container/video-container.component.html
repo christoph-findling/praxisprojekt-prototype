@@ -2,4 +2,5 @@
   <video muted #video [src]="source" [playbackRate]="playbackRate" (onended)="triggerVideoComplete()">
       <!-- <source [src]="source" /> -->
   </video>
+  <p *ngIf="!source">Kein Video vorhanden</p>
 </div>

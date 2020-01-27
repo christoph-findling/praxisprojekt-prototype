@@ -1,11 +1,12 @@
 export enum WhiteListedAction {
+  "start" = "start",
   "weiter" = "weiter",
   "zurück" = "zurück",
   "abspielen" = "abspielen",
   "pause" = "pause",
   "schneller" = "schneller",
   "langsamer" = "langsamer",
-  "stopp" = "stopp",
+  "stop" = "stop",
   "beenden" = "beenden",
   "informationen" = "informationen",
   "werkzeuge" = "werkzeuge",

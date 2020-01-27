@@ -9,8 +9,6 @@ export const defaultSteps: Step[] = [
     information: "cut into eye",
     complications: "many",
     videos: [
-      { path: "video_1_Katarakt.webm", fileName: "1_Katarakt.webm" },
-      { path: "video_1_Katarakt.webm", fileName: "1_Katarakt.webm" }
     ],
     instructionVideoSource: Routes.VIDEO_FOLDER + "/video_1_Katarakt.mp4"
   },
@@ -21,8 +19,6 @@ export const defaultSteps: Step[] = [
     information: "cut deeper into eye",
     complications: "many more",
     videos: [
-      { path: "video_2_Katarakt.webm", fileName: "2_Katarakt.webm" },
-      { path: "video_2_Katarakt.webm", fileName: "2_Katarakt.webm" }
     ],
     instructionVideoSource: Routes.VIDEO_FOLDER + "/video_2_Katarakt.mp4"
   },
@@ -33,8 +29,6 @@ export const defaultSteps: Step[] = [
     information: "remove the eye",
     complications: "no vision",
     videos: [
-      { path: "video_3_Katarakt.webm", fileName: "3_Katarakt.webm" },
-      { path: "video_3_Katarakt.webm", fileName: "3_Katarakt.webm" }
     ],
     instructionVideoSource: Routes.VIDEO_FOLDER + "/video_3_Katarakt.mp4"
   }
