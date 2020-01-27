@@ -6,6 +6,7 @@ import { StoreService } from "src/app/services/store-service.service";
 import { switchMap } from "rxjs/operators";
 import { NavigationService } from "src/app/services/navigation.service";
 import { ActionType } from "src/app/models/action-type.enum";
+import { DataService, SidenavMode } from "src/app/services/data.service";
 
 @Component({
   selector: "app-learning-path-overview",

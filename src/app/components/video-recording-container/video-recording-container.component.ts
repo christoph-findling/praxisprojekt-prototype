@@ -96,13 +96,18 @@ export class VideoRecordingContainerComponent implements OnInit, OnDestroy {
       path: fileUrl,
       fileName
     };
-    // this.updateLearningPath(newVideo);
+    this.updateLearningPath(newVideo);
   }
 
   async updateLearningPath(newVideo: StoredVideo) {
+    // get the most recent current path data
+    const getPath = await this.storageService
+      .read(this.currentLearningPath.id)
+      .toPromise();
+
     // make a deep copy of the current learningpath
     const updatedLearningPath: LearningPath = JSON.parse(
-      JSON.stringify(this.currentLearningPath)
+      JSON.stringify(getPath)
     );
 
     updatedLearningPath.steps[this.currentStepIndex].videos.push(newVideo);

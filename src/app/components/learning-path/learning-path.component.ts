@@ -5,7 +5,7 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { StoreService } from "src/app/services/store-service.service";
 import { switchMap } from "rxjs/operators";
 import { ActionType } from "src/app/models/action-type.enum";
-import { DataService } from "src/app/services/data.service";
+import { DataService, SidenavMode } from "src/app/services/data.service";
 import { Step } from "src/app/models/step.model";
 import { SpeechService } from "src/app/services/speech.service";
 import { WhiteListedAction } from "src/app/models/white-listed-action.enum";
@@ -36,6 +36,7 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   currentStepIndex = 0;
   private steps: Step[] = [];
   private state: State;
+  isLoaded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,6 +84,8 @@ export class LearningPathComponent implements OnInit, OnDestroy {
         }
         this.steps = learningPath.steps;
         setTimeout(() => {
+          console.log("start step");
+          this.isLoaded = true;
           this.startStep();
         }, 500);
       })
@@ -101,6 +104,7 @@ export class LearningPathComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.dataService.setSidenavMode(SidenavMode.HIDE);
   }
 
   onVideoComplete() {
@@ -116,18 +120,22 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   }
 
   changeStep(step: Step) {
-    const stepIndex = this.steps.findIndex(stepIterator => stepIterator.id === step.id);
-    this.currentStepIndex = stepIndex !== -1 ? stepIndex : this.currentStepIndex;
+    const stepIndex = this.steps.findIndex(
+      stepIterator => stepIterator.id === step.id
+    );
+    this.currentStepIndex =
+      stepIndex !== -1 ? stepIndex : this.currentStepIndex;
     this.startStep();
   }
 
   private startStep() {
     this.updateDataService(this.steps[this.currentStepIndex]);
     if (this.recordingContainer && this.recordingContainer.isRecording) {
-      this.recordingContainer.stopRecording().then(() => {
-        this.startInstructionSequence();
-      });
+      console.log("stop recording");
+      this.recordingContainer.stopRecording();
+      this.startInstructionSequence();
     } else {
+      console.log("start instruction sequence");
       this.startInstructionSequence();
     }
   }
@@ -135,7 +143,9 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   private startInstructionSequence() {
     this.state = State.INSTRUCTION;
     this.videoSource = this.currentStep.instructionVideoSource;
-    this.videoContainer.play();
+    setTimeout(() => {
+      this.videoContainer.play();
+    }, 500);
   }
 
   private updateDataService(step: Step) {
@@ -146,39 +156,39 @@ export class LearningPathComponent implements OnInit, OnDestroy {
   triggerAction(action: WhiteListedAction) {
     switch (action) {
       case WhiteListedAction.weiter:
-        console.log('executing weiter');
+        console.log("executing weiter");
         this.nextStep();
         break;
       case WhiteListedAction.zurück:
-        console.log('executing zurück');
+        console.log("executing zurück");
         this.previousStep();
         break;
       case WhiteListedAction.beenden:
-        console.log('executing beenden');
+        console.log("executing beenden");
         this.end();
         break;
       case WhiteListedAction.seitenleiste:
-        console.log('executing seitenleiste');
+        console.log("executing seitenleiste");
         this.toggleSidebar();
         break;
       case WhiteListedAction.anleitung:
-        console.log('executing anleitung');
+        console.log("executing anleitung");
         this.showSidebar();
         break;
       case WhiteListedAction.informationen:
-        console.log('executing informationen');
+        console.log("executing informationen");
         this.showInformation();
         break;
       case WhiteListedAction.komplikationen:
-        console.log('executing komplikationen');
+        console.log("executing komplikationen");
         this.showComplications();
         break;
       case WhiteListedAction.werkzeuge:
-        console.log('executing werkzeuge');
+        console.log("executing werkzeuge");
         this.showTools();
         break;
       case WhiteListedAction.wiederholen:
-        console.log('executing wiederholen');
+        console.log("executing wiederholen");
         this.resetCurrentStep();
         break;
     }
@@ -200,13 +210,22 @@ export class LearningPathComponent implements OnInit, OnDestroy {
     this.dataService.showInformation();
   }
 
-  private nextStep() {
-    if (this.currentStepIndex === this.steps.length - 1) {
-      this.finished = true;
-      return;
+  private async nextStep() {
+    if (this.isTraining && this.isStateInstruction) {
+      this.state = State.VIDEO;
+      await this.recordingContainer.startCamera();
+      this.recordingContainer.startRecording();
+    } else {
+      if (this.currentStepIndex === this.steps.length - 1) {
+        if (this.recordingContainer.isRecording) {
+          this.recordingContainer.stopRecording();
+        }
+        this.finished = true;
+        return;
+      }
+      this.currentStepIndex++;
+      this.startStep();
     }
-    this.currentStepIndex++;
-    this.startStep();
   }
 
   private previousStep() {

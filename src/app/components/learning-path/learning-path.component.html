@@ -1,13 +1,13 @@
 <div *ngIf="finished">
   Herzlichen Glückwunsch zum Absolvieren dieser Einheit!
 </div>
-<div *ngIf="!finished">
+<div class="learning-path" *ngIf="!finished && isLoaded">
   <div *ngIf="learningPath$ | async as learningPath">
     <app-video-recording-container [hidden]="isLearning || isStateInstruction"
       [currentStepIndex]="currentStepIndex"
       [currentLearningPath]="learningPath">
     </app-video-recording-container>
-    <app-video-container [hidden]="isTraining && isStateVideo" [source]="videoSource"
+    <app-video-container [ngStyle]="{'display': isTraining && isStateVideo ? 'none' : 'flex'}" [source]="videoSource"
         (videoComplete)="onVideoComplete()">
     </app-video-container>
     <app-step-container [steps]="learningPath.steps" (stepChange)="changeStep($event)">

@@ -1,4 +1,5 @@
 import { Step } from "./models/step.model";
+import { Routes } from "./routes";
 
 export const defaultSteps: Step[] = [
   {
@@ -11,7 +12,7 @@ export const defaultSteps: Step[] = [
       { path: "video_1_Katarakt.webm", fileName: "1_Katarakt.webm" },
       { path: "video_1_Katarakt.webm", fileName: "1_Katarakt.webm" }
     ],
-    instructionVideoSource: "video_1_Katarakt.webm"
+    instructionVideoSource: Routes.VIDEO_FOLDER + "/video_1_Katarakt.mp4"
   },
   {
     id: "1",
@@ -23,7 +24,7 @@ export const defaultSteps: Step[] = [
       { path: "video_2_Katarakt.webm", fileName: "2_Katarakt.webm" },
       { path: "video_2_Katarakt.webm", fileName: "2_Katarakt.webm" }
     ],
-    instructionVideoSource: "video_2_Katarakt.webm"
+    instructionVideoSource: Routes.VIDEO_FOLDER + "/video_2_Katarakt.mp4"
   },
   {
     id: "2",
@@ -35,6 +36,6 @@ export const defaultSteps: Step[] = [
       { path: "video_3_Katarakt.webm", fileName: "3_Katarakt.webm" },
       { path: "video_3_Katarakt.webm", fileName: "3_Katarakt.webm" }
     ],
-    instructionVideoSource: "video_3_Katarakt.webm"
+    instructionVideoSource: Routes.VIDEO_FOLDER + "/video_3_Katarakt.mp4"
   }
 ];

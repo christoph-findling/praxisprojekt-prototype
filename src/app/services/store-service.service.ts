@@ -15,14 +15,16 @@ export class StoreService {
     const result = new Subject<LearningPath[]>();
     const learningPaths: LearningPath[] = [];
     this.onNgfReady(() => {
-      this.ngf.iterate((value, key) => {
-        if (key.indexOf("video") < 0) {
-          learningPaths.push(value as LearningPath);
-        }
-      }).then(() => {
-        result.next(learningPaths);
-        result.complete();
-      });
+      this.ngf
+        .iterate((value, key) => {
+          if (key.indexOf("video") < 0) {
+            learningPaths.push(value as LearningPath);
+          }
+        })
+        .then(() => {
+          result.next(learningPaths);
+          result.complete();
+        });
     });
     return result.asObservable();
   }
@@ -56,7 +58,7 @@ export class StoreService {
     this.ngf.ready().then(() => fn());
   }
 
-  async getVideo(fileName: string): Promise<Blob> {
+  async getVideo(fileName: string, isDefault?: boolean): Promise<Blob> {
     await this.ngf.ready();
     return await this.ngf.getItem("video_" + fileName);
   }
